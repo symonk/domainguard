@@ -1,33 +1,26 @@
-# === Build stage ===
-FROM python:3.13-slim AS builder
-
-WORKDIR /app
-
-# Install build tools for compiling dependencies
-RUN apt-get update && apt-get install -y build-essential
-
-# Upgrade pip first
-RUN pip install --upgrade pip
-
-# Copy dependency metadata and source code
-COPY pyproject.toml uv.lock ./
-COPY ./app ./app
-
-# Install dependencies to a custom prefix (isolated folder)
-RUN pip install --prefix=/install .
-
-# === Final stage ===
+# TODO: This is really suboptimal right now, can improve it with multi stage etc.
 FROM python:3.13-slim
 
 WORKDIR /app
 
-# Copy installed packages from builder stage
-COPY --from=builder /install /usr/local
+# Install build tools if you need to compile dependencies (optional)
+RUN apt-get update && apt-get install -y build-essential
 
-# Copy app source code (optional if you installed your package as editable)
+# Upgrade pip
+RUN pip install --upgrade pip
+
+# Copy dependency files first (to leverage Docker cache)
+COPY pyproject.toml uv.lock ./
+
+# Install dependencies
+RUN pip install --no-cache-dir .
+
+# Copy app source code
 COPY ./app ./app
+
+# Copy your .env file (optional, only if your app reads it from disk)
+COPY .env .env
 
 EXPOSE 8000
 
-# Run your FastAPI app via uvicorn as PID 1
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
