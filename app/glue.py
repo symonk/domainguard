@@ -1,6 +1,6 @@
 import typing
 
-from db import SessionLocal
+from app.db import SessionLocal
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
