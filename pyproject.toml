@@ -11,6 +11,7 @@ dependencies = [
     "httpx>=0.28.1",
     "pex>=2.50.1",
     "pydantic-settings>=2.10.1",
+    "pytest>=8.4.1",
     "python-dotenv>=1.1.1",
     "python-whois>=0.9.5",
     "sqlalchemy[asyncio]>=2.0.42",
