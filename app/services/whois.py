@@ -14,6 +14,7 @@ class WhoIsResponse:
     
 
 class WhoisService:
+    
     def __init__(self) -> typing.NoReturn:
         ...
 
