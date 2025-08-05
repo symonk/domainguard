@@ -6,7 +6,7 @@ import json
 import typing
 
 
-def test_analyse_returns_200_ok() -> typing.NoReturn:
+def test_health_returns_uptime() -> typing.NoReturn:
     client = TestClient(main.app)
     response = client.get("/health")
     assert_that(response.status_code == HTTPStatus.OK)
